@@ -1,0 +1,84 @@
+{
+  "doctors": [
+    {
+      "name": "Adam",
+      "surname": "Śmieszko"
+    },
+    {
+      "name": "Ewa",
+      "surname": "Kołysanka"
+    },
+    {
+      "name": "Piotr",
+      "surname": "Żartowski"
+    },
+    {
+      "name": "Anna",
+      "surname": "Śmieszewska"
+    },
+    {
+      "name": "Krzysztof",
+      "surname": "Śmieszak"
+    },
+    {
+      "name": "Małgorzata",
+      "surname": "Śmieszewska"
+    },
+    {
+      "name": "Tomasz",
+      "surname": "Śmieszewski"
+    },
+    {
+      "name": "Magdalena",
+      "surname": "Śmieszewska"
+    },
+    {
+      "name": "Marcin",
+      "surname": "Śmieszko"
+    },
+    {
+      "name": "Katarzyna",
+      "surname": "Śmieszewska"
+    },
+    {
+      "name": "Michał",
+      "surname": "Śmieszak"
+    },
+    {
+      "name": "Agnieszka",
+      "surname": "Śmieszewska"
+    },
+    {
+      "name": "Grzegorz",
+      "surname": "Śmieszko"
+    },
+    {
+      "name": "Joanna",
+      "surname": "Śmieszewska"
+    },
+    {
+      "name": "Andrzej",
+      "surname": "Śmieszak"
+    },
+    {
+      "name": "Monika",
+      "surname": "Śmieszewska"
+    },
+    {
+      "name": "Tadeusz",
+      "surname": "Śmieszewski"
+    },
+    {
+      "name": "Aleksandra",
+      "surname": "Śmieszewska"
+    },
+    {
+      "name": "Robert",
+      "surname": "Śmieszko"
+    },
+    {
+      "name": "Natalia",
+      "surname": "Śmieszewska"
+    }
+  ]
+}
