@@ -5,11 +5,13 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix --ignore-path .gitignore"
+    "lint": "eslint . --fix --ignore-path .gitignore",
+    "deploy": "vue-cli-service build && gh-pages -d dist"
   },
   "dependencies": {
     "@mdi/font": "6.2.95",
     "core-js": "^3.34.0",
+    "gh-pages": "^6.1.1",
     "roboto-fontface": "*",
     "vue": "^3.4.21",
     "vuetify": "^3.5.8"

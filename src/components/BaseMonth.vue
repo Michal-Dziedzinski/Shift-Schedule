@@ -1,42 +1,88 @@
 <template>
   <div class="calendar">
-    <div class="week" v-for="week in weeks" :key="week.id">
-      <BaseDay v-for="day in week.days" :key="day.id" :day="day"></BaseDay>
+    <div class="days">
+      <BaseDay v-for="day in days" :key="day.id" :day="day">
+        <v-select
+          v-model="getDoctorSelect(day.id)[0]"
+          :items="doctorsNames"
+          hint="Wybierz lekarza"
+          label="Lekarze"
+          multiple
+          persistent-hint
+        ></v-select>
+      </BaseDay>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import BaseDay from "./BaseDay.vue";
+import doctorsList from "../data/doctors.json";
 
 interface Day {
   id: number;
   date: Date;
 }
 
-interface Week {
+interface Doctor {
+  name: string;
+  surname: string;
   id: number;
-  days: Day[];
+  unavailable: number[];
+  available: number[];
 }
 
-const weeks = ref<Week[]>([]);
+const props = defineProps({
+  date: {
+    type: Object as () => Date,
+    required: true,
+  },
+});
+
+const { doctors }: { doctors: Doctor[] } = doctorsList;
+
+const doctorsNames = doctors.map(
+  (doctor) => `${doctor.name} ${doctor.surname}`
+);
+
+const doctorsSelects = ref<Record<number, any>>({});
+
+const days = ref<Day[]>([]);
+
+const updateDays = () => {
+  const month = props.date.getMonth();
+  const daysInMonth = new Date(
+    props.date.getFullYear(),
+    month + 1,
+    0
+  ).getDate();
+  days.value = [];
+  for (let day = 1; day <= daysInMonth; day++) {
+    days.value.push({
+      id: day,
+      date: new Date(props.date.getFullYear(), month, day),
+    });
+  }
+};
+
+const getDoctorSelect = (dayId: number) => {
+  if (!doctorsSelects.value[dayId]) {
+    doctorsSelects.value[dayId] = ref([]);
+  }
+  return doctorsSelects.value[dayId];
+};
 
 onMounted(() => {
-  const date = new Date();
-  const month = date.getMonth();
-  let day = 1;
-  while (day <= new Date(date.getFullYear(), month + 1, 0).getDate()) {
-    const week: Day[] = [];
-    for (let i = 0; i < 7; i++) {
-      week.push({
-        id: day,
-        date: new Date(date.getFullYear(), month, day++),
-      });
-    }
-    weeks.value.push({ id: weeks.value.length + 1, days: week });
-  }
+  updateDays();
 });
+
+watch(
+  () => props.date,
+  () => {
+    updateDays();
+  }
+);
 </script>
 
 <style scoped>
@@ -46,8 +92,8 @@ onMounted(() => {
   width: 100%;
 }
 
-.week {
-  display: flex;
-  justify-content: space-between;
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
 }
 </style>

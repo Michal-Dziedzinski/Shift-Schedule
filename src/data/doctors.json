@@ -2,83 +2,31 @@
   "doctors": [
     {
       "name": "Adam",
-      "surname": "Śmieszko"
+      "surname": "Śmieszko",
+      "id": 1,
+      "unavailable": [3, 7, 11, 15, 19],
+      "available": [1, 2, 4, 5, 6]
     },
     {
       "name": "Ewa",
-      "surname": "Kołysanka"
+      "surname": "Kołysanka",
+      "id": 2,
+      "unavailable": [2, 6, 10, 14, 18],
+      "available": [1, 3, 4, 5, 7]
     },
     {
       "name": "Piotr",
-      "surname": "Żartowski"
+      "surname": "Żartowski",
+      "id": 3,
+      "unavailable": [1, 5, 9, 13, 17],
+      "available": [2, 3, 4, 6, 7]
     },
     {
       "name": "Anna",
-      "surname": "Śmieszewska"
-    },
-    {
-      "name": "Krzysztof",
-      "surname": "Śmieszak"
-    },
-    {
-      "name": "Małgorzata",
-      "surname": "Śmieszewska"
-    },
-    {
-      "name": "Tomasz",
-      "surname": "Śmieszewski"
-    },
-    {
-      "name": "Magdalena",
-      "surname": "Śmieszewska"
-    },
-    {
-      "name": "Marcin",
-      "surname": "Śmieszko"
-    },
-    {
-      "name": "Katarzyna",
-      "surname": "Śmieszewska"
-    },
-    {
-      "name": "Michał",
-      "surname": "Śmieszak"
-    },
-    {
-      "name": "Agnieszka",
-      "surname": "Śmieszewska"
-    },
-    {
-      "name": "Grzegorz",
-      "surname": "Śmieszko"
-    },
-    {
-      "name": "Joanna",
-      "surname": "Śmieszewska"
-    },
-    {
-      "name": "Andrzej",
-      "surname": "Śmieszak"
-    },
-    {
-      "name": "Monika",
-      "surname": "Śmieszewska"
-    },
-    {
-      "name": "Tadeusz",
-      "surname": "Śmieszewski"
-    },
-    {
-      "name": "Aleksandra",
-      "surname": "Śmieszewska"
-    },
-    {
-      "name": "Robert",
-      "surname": "Śmieszko"
-    },
-    {
-      "name": "Natalia",
-      "surname": "Śmieszewska"
+      "surname": "Śmieszewska",
+      "id": 4,
+      "unavailable": [4, 8, 12, 16, 20],
+      "available": [1, 2, 3, 5, 6]
     }
   ]
 }
