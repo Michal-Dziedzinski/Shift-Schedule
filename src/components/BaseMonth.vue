@@ -62,7 +62,6 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue";
-import html2pdf from "html2pdf.js";
 import BaseDay from "./BaseDay.vue";
 import doctorsList from "../data/doctors.json";
 
@@ -158,14 +157,7 @@ const getDoctorSelect = (dayId: number) => {
 };
 
 const generatePDFwithSelections = () => {
-  html2pdf(document.getElementById("element-to-convert"), {
-    margin: 1,
-    filename: "i-was-html.pdf",
-    html2canvas: {
-      scrollX: 0,
-      scrollY: 0,
-    },
-  });
+  console.log("siema");
 };
 </script>
 

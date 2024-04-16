@@ -1,12 +1,14 @@
 {
   "name": "shift-schedule",
   "version": "0.0.0",
+  "homepage": "https://Michal-Dziedzinsk.github.io/Shift-Schedule/",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix --ignore-path .gitignore",
-    "deploy": "vue-cli-service build && gh-pages -d dist"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@mdi/font": "6.2.95",
