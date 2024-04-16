@@ -1,7 +1,7 @@
 {
   "name": "shift-schedule",
   "version": "0.0.0",
-  "homepage": "https://michal-dziedzinsk.github.io/Shift-Schedule/",
+  "homepage": "https://michal-dziedzinski.github.io/Shift-Schedule/",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
