@@ -1,22 +1,68 @@
 <template>
-  <div class="calendar">
+  <div id="element-to-convert" class="calendar">
     <div class="days">
       <BaseDay v-for="day in days" :key="day.id" :day="day">
         <v-select
           v-model="getDoctorSelect(day.id)[0]"
-          :items="doctorsNames"
-          hint="Wybierz lekarza"
+          :items="sortedDoctorsMaternityWard[day.id - 1]"
+          item-title="fullName"
+          hint="Wybierz lekarza porodówka"
+          label="Lekarze"
+          persistent-hint
+        >
+          <template v-slot:item="{ props, item }">
+            <v-list-item
+              v-bind="props"
+              :base-color="
+                item.raw.available ? 'green' : item.raw.unavailable ? 'red' : ''
+              "
+            >
+            </v-list-item>
+          </template>
+        </v-select>
+        <v-select
+          v-model="getDoctorSelect(day.id)[1]"
+          :items="sortedDoctorsOCP[day.id - 1]"
+          item-title="fullName"
+          hint="Wybierz lekarza OCP"
           label="Lekarze"
           multiple
           persistent-hint
-        ></v-select>
+        >
+          <template v-slot:item="{ props, item }">
+            <v-list-item
+              v-bind="props"
+              :base-color="
+                item.raw.available ? 'green' : item.raw.unavailable ? 'red' : ''
+              "
+            >
+            </v-list-item>
+          </template>
+        </v-select>
       </BaseDay>
     </div>
   </div>
+  <v-btn
+    @click="clearSelection"
+    class="button"
+    color="red-darken-1"
+    append-icon="mdi-trash-can-outline"
+  >
+    Wyczyść
+  </v-btn>
+  <v-btn
+    @click="generatePDFwithSelections"
+    class="button"
+    color="green-accent-4"
+    append-icon="mdi-export-variant"
+  >
+    Generuj PDF
+  </v-btn>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, computed } from "vue";
+import html2pdf from "html2pdf.js";
 import BaseDay from "./BaseDay.vue";
 import doctorsList from "../data/doctors.json";
 
@@ -40,31 +86,69 @@ const props = defineProps({
   },
 });
 
-const { doctors }: { doctors: Doctor[] } = doctorsList;
-
-const doctorsNames = doctors.map(
-  (doctor) => `${doctor.name} ${doctor.surname}`
-);
+const {
+  doctorsOCP,
+  doctorsMaternityWard,
+}: { doctorsOCP: Doctor[]; doctorsMaternityWard: Doctor[] } = doctorsList;
 
 const doctorsSelects = ref<Record<number, any>>({});
 
-const days = ref<Day[]>([]);
-
-const updateDays = () => {
+const days = computed(() => {
   const month = props.date.getMonth();
   const daysInMonth = new Date(
     props.date.getFullYear(),
     month + 1,
     0
   ).getDate();
-  days.value = [];
+  const daysArray: Day[] = [];
   for (let day = 1; day <= daysInMonth; day++) {
-    days.value.push({
+    daysArray.push({
       id: day,
       date: new Date(props.date.getFullYear(), month, day),
     });
   }
+  return daysArray;
+});
+
+const mapDoctors = (doctors: Doctor[], id: number) => {
+  return doctors
+    .map((doctor) => {
+      return {
+        ...doctor,
+        fullName: `${doctor.name} ${doctor.surname}`,
+        available: doctor.available.includes(id),
+        unavailable: doctor.unavailable.includes(id),
+      };
+    })
+    .sort((a, b) => {
+      if (a.available && !b.available) {
+        return -1;
+      } else if (!a.available && b.available) {
+        return 1;
+      } else if (a.unavailable && !b.unavailable) {
+        return 1;
+      } else if (!a.unavailable && b.unavailable) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
 };
+
+const clearSelection = () => {
+  doctorsSelects.value = {};
+};
+
+const sortedDoctorsOCP = computed(() => {
+  return days.value.map(({ id }) => {
+    return mapDoctors(doctorsOCP, id);
+  });
+});
+const sortedDoctorsMaternityWard = computed(() => {
+  return days.value.map(({ id }) => {
+    return mapDoctors(doctorsMaternityWard, id);
+  });
+});
 
 const getDoctorSelect = (dayId: number) => {
   if (!doctorsSelects.value[dayId]) {
@@ -73,16 +157,16 @@ const getDoctorSelect = (dayId: number) => {
   return doctorsSelects.value[dayId];
 };
 
-onMounted(() => {
-  updateDays();
-});
-
-watch(
-  () => props.date,
-  () => {
-    updateDays();
-  }
-);
+const generatePDFwithSelections = () => {
+  html2pdf(document.getElementById("element-to-convert"), {
+    margin: 1,
+    filename: "i-was-html.pdf",
+    html2canvas: {
+      scrollX: 0,
+      scrollY: 0,
+    },
+  });
+};
 </script>
 
 <style scoped>
@@ -90,6 +174,11 @@ watch(
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-bottom: 32px;
+}
+
+.button {
+  margin-right: 16px;
 }
 
 .days {

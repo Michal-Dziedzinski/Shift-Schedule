@@ -1,7 +1,7 @@
 <template>
   <v-date-picker v-model="date"></v-date-picker>
   <h1 class="heading">{{ monthName }}</h1>
-  <BaseMonth :date="date" :monthName="monthName" />
+  <BaseMonth :date="date" />
 </template>
 
 <script lang="ts" setup>

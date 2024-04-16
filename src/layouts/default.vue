@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main class="main">
       <router-view />
     </v-main>
   </v-app>
@@ -9,3 +9,8 @@
 <script lang="ts" setup>
 //
 </script>
+<style scoped>
+.main {
+  margin: 32px;
+}
+</style>
