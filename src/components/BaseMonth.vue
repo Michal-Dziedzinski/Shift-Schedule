@@ -50,14 +50,14 @@
   >
     Wyczyść
   </v-btn>
-  <v-btn
+  <!-- <v-btn
     @click="generatePDFwithSelections"
     class="button"
     color="green-accent-4"
     append-icon="mdi-export-variant"
   >
     Generuj PDF
-  </v-btn>
+  </v-btn> -->
 </template>
 
 <script lang="ts" setup>
