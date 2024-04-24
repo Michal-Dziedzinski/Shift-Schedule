@@ -1,20 +1,25 @@
 <template>
   <div id="element-to-convert" class="calendar">
     <div class="days">
-      <BaseDay v-for="day in days" :key="day.id" :day="day">
+      <BaseDay v-for="(day, index) in days" :key="day.date" :day="day">
         <v-select
           v-model="getDoctorSelect(day.id)[0]"
-          :items="sortedDoctorsMaternityWard[day.id - 1]"
+          :items="sortedDoctorsMaternityWard[index]"
           item-title="fullName"
           hint="Wybierz lekarza porodówka"
           label="Lekarze"
+          :disabled="day.disabled"
           persistent-hint
         >
           <template v-slot:item="{ props, item }">
             <v-list-item
               v-bind="props"
               :base-color="
-                item.raw.available ? 'green' : item.raw.unavailable ? 'red' : ''
+                item.raw.isAvailable
+                  ? 'green'
+                  : item.raw.isUnavailable
+                  ? 'red'
+                  : ''
               "
             >
             </v-list-item>
@@ -22,18 +27,23 @@
         </v-select>
         <v-select
           v-model="getDoctorSelect(day.id)[1]"
-          :items="sortedDoctorsOCP[day.id - 1]"
+          :items="sortedDoctorsOCP[index]"
           item-title="fullName"
           hint="Wybierz lekarza OCP"
           label="Lekarze"
           multiple
+          :disabled="day.disabled"
           persistent-hint
         >
           <template v-slot:item="{ props, item }">
             <v-list-item
               v-bind="props"
               :base-color="
-                item.raw.available ? 'green' : item.raw.unavailable ? 'red' : ''
+                item.raw.isAvailable
+                  ? 'green'
+                  : item.raw.isUnavailable
+                  ? 'red'
+                  : ''
               "
             >
             </v-list-item>
@@ -68,6 +78,7 @@ import doctorsList from "../data/doctors.json";
 interface Day {
   id: number;
   date: Date;
+  disabled?: boolean;
 }
 
 interface Doctor {
@@ -106,27 +117,40 @@ const days = computed(() => {
       date: new Date(props.date.getFullYear(), month, day),
     });
   }
+  const date = new Date(daysArray[0].date);
+  const dayOfWeek = date.getDay();
+  const index = dayOfWeek === 0 ? 7 : dayOfWeek;
+  if (index > 1) {
+    for (let i = 1; i < index; i++) {
+      daysArray.unshift({
+        id: i + 100,
+        date: new Date(date.setDate(date.getDate() - 1)),
+        disabled: true,
+      });
+    }
+  }
   return daysArray;
 });
 
 const mapDoctors = (doctors: Doctor[], id: number) => {
+  // console.log(id);
   return doctors
     .map((doctor) => {
       return {
         ...doctor,
         fullName: `${doctor.name} ${doctor.surname}`,
-        available: doctor.available.includes(id),
-        unavailable: doctor.unavailable.includes(id),
+        isAvailable: doctor.available.includes(id),
+        isUnavailable: doctor.unavailable.includes(id),
       };
     })
     .sort((a, b) => {
-      if (a.available && !b.available) {
+      if (a.isAvailable && !b.isAvailable) {
         return -1;
-      } else if (!a.available && b.available) {
+      } else if (!a.isAvailable && b.isAvailable) {
         return 1;
-      } else if (a.unavailable && !b.unavailable) {
+      } else if (a.isUnavailable && !b.isUnavailable) {
         return 1;
-      } else if (!a.unavailable && b.unavailable) {
+      } else if (!a.isUnavailable && b.isUnavailable) {
         return -1;
       } else {
         return 0;

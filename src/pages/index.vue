@@ -9,7 +9,13 @@ import BaseMonth from "../components/BaseMonth.vue";
 
 import { ref, computed } from "vue";
 
-const date = ref(new Date());
+const currentDate = new Date();
+const nextMonthDate = new Date(
+  currentDate.getFullYear(),
+  currentDate.getMonth() + 1,
+  currentDate.getDate()
+);
+const date = ref(nextMonthDate);
 
 const monthName = computed(() => {
   return date.value.toLocaleString("pl-PL", { month: "long" });
