@@ -60,20 +60,14 @@
   >
     Wyczyść
   </v-btn>
-  <!-- <v-btn
-    @click="generatePDFwithSelections"
-    class="button"
-    color="green-accent-4"
-    append-icon="mdi-export-variant"
-  >
-    Generuj PDF
-  </v-btn> -->
+  <SignOut />
 </template>
 
 <script lang="ts" setup>
 import { ref, computed } from "vue";
 import BaseDay from "./BaseDay.vue";
-import doctorsList from "../data/doctors.json";
+import SignOut from "./SignOut.vue";
+import { supabase } from "../supabase";
 
 interface Day {
   id: number;
@@ -89,17 +83,30 @@ interface Doctor {
   available: number[];
 }
 
+const fetchDoctorsList = async (table) => {
+  try {
+    const { data: doctorsList, error } = await supabase.from(table).select("*");
+    if (error) {
+      throw error;
+    }
+    return doctorsList;
+  } catch (error) {
+    console.error("Error fetching doctors list:", error.message);
+    return [];
+  }
+};
+
+const doctorsMaternityWard: Doctor[] = await fetchDoctorsList(
+  "doctors_maternity_ward"
+);
+const doctorsOCP: Doctor[] = await fetchDoctorsList("doctors_ocp");
+
 const props = defineProps({
   date: {
     type: Object as () => Date,
     required: true,
   },
 });
-
-const {
-  doctorsOCP,
-  doctorsMaternityWard,
-}: { doctorsOCP: Doctor[]; doctorsMaternityWard: Doctor[] } = doctorsList;
 
 const doctorsSelects = ref<Record<number, any>>({});
 
@@ -133,7 +140,6 @@ const days = computed(() => {
 });
 
 const mapDoctors = (doctors: Doctor[], id: number) => {
-  // console.log(id);
   return doctors
     .map((doctor) => {
       return {
@@ -178,10 +184,6 @@ const getDoctorSelect = (dayId: number) => {
     doctorsSelects.value[dayId] = ref([]);
   }
   return doctorsSelects.value[dayId];
-};
-
-const generatePDFwithSelections = () => {
-  console.log("siema");
 };
 </script>
 

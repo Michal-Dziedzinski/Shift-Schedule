@@ -7,9 +7,11 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AuthForm: typeof import('./components/AuthForm.vue')['default']
     BaseDay: typeof import('./components/BaseDay.vue')['default']
     BaseMonth: typeof import('./components/BaseMonth.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SignOut: typeof import('./components/SignOut.vue')['default']
   }
 }
