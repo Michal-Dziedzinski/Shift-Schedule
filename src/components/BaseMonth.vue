@@ -65,6 +65,7 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue";
+import { useStorage } from "@vueuse/core";
 import BaseDay from "./BaseDay.vue";
 import SignOut from "./SignOut.vue";
 import { supabase } from "../supabase";
@@ -108,7 +109,10 @@ const props = defineProps({
   },
 });
 
-const doctorsSelects = ref<Record<number, any>>({});
+const doctorsSelects = useStorage(
+  "doctorsSelects",
+  ref<Record<number, any>>({})
+);
 
 const days = computed(() => {
   const month = props.date.getMonth();
