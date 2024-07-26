@@ -163,11 +163,10 @@ const mapDoctors = (doctors: Doctor[], id: number) => {
       } else if (!a.isUnavailable && b.isUnavailable) {
         return -1;
       } else {
-        return 0;
+        return a.fullName.localeCompare(b.fullName);
       }
     });
 };
-
 const clearSelection = () => {
   doctorsSelects.value = {};
 };
