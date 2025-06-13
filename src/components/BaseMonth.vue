@@ -8,6 +8,7 @@
           item-title="fullName"
           hint="Wybierz lekarza porodówka"
           label="Lekarze"
+          multiple
           :disabled="day.disabled"
           persistent-hint
         >
@@ -60,6 +61,14 @@
   >
     Wyczyść
   </v-btn>
+  <v-btn
+    @click="openInGoogleSheets"
+    class="button"
+    color="green-darken-1"
+    append-icon="mdi-google-spreadsheet"
+  >
+    Otwórz w Google Sheets
+  </v-btn>
   <SignOut />
 </template>
 
@@ -80,8 +89,8 @@ interface Doctor {
   name: string;
   surname: string;
   id: number;
-  unavailable: number[];
-  available: number[];
+  unavailable: number[] | null | undefined;
+  available: number[] | null | undefined;
 }
 
 const fetchDoctorsList = async (table) => {
@@ -149,8 +158,8 @@ const mapDoctors = (doctors: Doctor[], id: number) => {
       return {
         ...doctor,
         fullName: `${doctor.name} ${doctor.surname}`,
-        isAvailable: doctor.available.includes(id),
-        isUnavailable: doctor.unavailable.includes(id),
+        isAvailable: doctor.available?.includes(id) || false,
+        isUnavailable: doctor.unavailable?.includes(id) || false,
       };
     })
     .sort((a, b) => {
@@ -187,6 +196,69 @@ const getDoctorSelect = (dayId: number) => {
     doctorsSelects.value[dayId] = ref([]);
   }
   return doctorsSelects.value[dayId];
+};
+
+const openInGoogleSheets = () => {
+  const monthName = props.date.toLocaleString("pl-PL", { month: "long" });
+  const year = props.date.getFullYear();
+
+  let data = days.value
+    .map((day) => {
+      if (day.disabled) return null;
+
+      const selections = doctorsSelects.value[day.id];
+
+      const maternityDoctors =
+        typeof selections?.[0] === "string"
+          ? [selections[0]]
+          : Array.isArray(selections?.[0])
+          ? selections[0]
+          : [];
+
+      const ocpDoctors =
+        typeof selections?.[1] === "string"
+          ? [selections[1]]
+          : Array.isArray(selections?.[1])
+          ? selections[1]
+          : [];
+
+      return [
+        day.date.getDate(),
+        maternityDoctors.join(" | "),
+        ocpDoctors.join(" | "),
+      ];
+    })
+    .filter((row) => row !== null);
+
+  const headers = [["Dzień", "Lekarze Porodówka", "Lekarze OCP"]];
+  const title = `Harmonogram ${monthName} ${year}`;
+
+  const sheet = [headers[0], ...data]
+    .map((row) => row.map((cell) => cell || "").join("\t"))
+    .join("\n");
+
+  const blob = new Blob([sheet], {
+    type: "text/tab-separated-values;charset=utf-8",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${title}.tsv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+
+  alert(`Aby zaimportować dane do Google Sheets:
+1. Kliknij "File" -> "Import"
+2. Wybierz zakładkę "Upload"
+3. Przeciągnij lub wybierz pobrany plik "${title}.tsv"
+4. W opcjach importu wybierz:
+   - Separator: "Tab"
+   - "Replace current sheet"
+5. Kliknij "Import data"`);
+
+  window.open("https://docs.google.com/spreadsheets/create", "_blank");
 };
 </script>
 
