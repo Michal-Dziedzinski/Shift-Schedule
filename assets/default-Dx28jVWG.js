@@ -1,1 +1,0 @@
-import{d as o,c as s,w as e,V as r,r as _,o as c,a,b as n}from"./index-BAeoca1o.js";import{_ as p}from"./plugin-vueexport-helper-DlAUqK2U.js";const l=o({__name:"default",setup(u){return(d,f)=>{const t=_("router-view");return c(),s(r,null,{default:e(()=>[a(n,{class:"main"},{default:e(()=>[a(t)]),_:1})]),_:1})}}}),v=p(l,[["__scopeId","data-v-91cc21e2"]]);export{v as default};
